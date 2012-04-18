@@ -13,7 +13,7 @@
 //#include "passworddialog.h"
 //#include "preferencedialog.h"
 //#include "historydialog.h"
-#include "tradehistorywidget.h"
+//#include "tradehistorywidget.h"
 #include <QDateTime>
 //#include <QtCrypto/QtCrypto>
 
@@ -26,24 +26,24 @@ BTCTrader::BTCTrader(QObject *parent) :
     timerTicker = new QTimer ( this );
     timerBalance = new QTimer ( this );
     timerOrders = new QTimer ( this );
-    PasswordDialog* passwordDialog = new PasswordDialog ( this );
+/*    PasswordDialog* passwordDialog = new PasswordDialog ( this );
     passwordDialog->exec();
     QString openPassword = passwordDialog->getPassword ();
-    delete passwordDialog;
+    delete passwordDialog;*/
     btctrader = new QSettings ( "blackish", "btctrader" );
-    openKeys ( openPassword );
+//    openKeys ( openPassword );
     fee = btctrader->value( "fee" ).toFloat();
     request = new QNetworkAccessManager ( this );
 
     nonce = QDateTime::currentDateTime().toTime_t() * 1000000;
 
     connect ( request, SIGNAL ( finished ( QNetworkReply* ) ), this, SLOT ( gotReply ( QNetworkReply* ) ) );
-    graph = new GraphicWidget ( this );
-    ordersGraph = new OrdersWidget ( this );
+//    graph = new GraphicWidget ( this );
+/*    ordersGraph = new OrdersWidget ( this );
     myOrderTableWidget = new MyOrdersTableWidget ( this );
     myOrderTableWidget->verticalHeader()->setVisible( false );
     myOrderTableWidget->horizontalHeader()->setVisible( false );
-    myOrderTableWidget->setSizePolicy( QSizePolicy ( QSizePolicy::Ignored, QSizePolicy::Ignored ) );
+    myOrderTableWidget->setSizePolicy( QSizePolicy ( QSizePolicy::Ignored, QSizePolicy::Ignored ) );*/
 
 /*    ui->myOrdersWidget->setLayout( new QGridLayout () );
     ui->myOrdersWidget->layout()->addWidget( myOrderTableWidget );
@@ -56,7 +56,7 @@ BTCTrader::BTCTrader(QObject *parent) :
     connect ( timerTicker, SIGNAL ( timeout () ), this, SLOT ( sendTickerRequest () ) );
     connect ( timerBalance, SIGNAL ( timeout () ), this, SLOT ( sendBalanceRequest () ) );
     connect ( timerOrders, SIGNAL ( timeout () ), this, SLOT ( sendOrdersRequest () ) );
-    connect ( myOrderTableWidget, SIGNAL ( cancelOrderSignal ( QString, int ) ), this, SLOT ( sendCancelOrderRequest ( QString , int ) ));
+//    connect ( myOrderTableWidget, SIGNAL ( cancelOrderSignal ( QString, int ) ), this, SLOT ( sendCancelOrderRequest ( QString , int ) ));
 /*    connect ( ui->buyAmountLineEdit, SIGNAL ( textChanged ( QString  ) ), this, SLOT ( buyTextEdited ( QString ) ) );
     connect ( ui->buyRateLineEdit, SIGNAL ( textChanged ( QString ) ), this, SLOT ( buyTextEdited ( QString ) ) );
     connect ( ui->sellAmountLineEdit, SIGNAL ( textChanged ( QString  ) ), this, SLOT ( sellTextEdited ( QString ) ) );
@@ -69,33 +69,39 @@ BTCTrader::BTCTrader(QObject *parent) :
     balance = 0;
     balanceUSD = 0;
     poolInterval = 5000;
-    timerDepth->start( poolInterval );
-    timerTicker->start( poolInterval );
-    timerOrders->start ( poolInterval );
+//    timerDepth->start( poolInterval );
+//    timerTicker->start( poolInterval );
+//    timerOrders->start ( poolInterval );
 }
 
 BTCTrader::~BTCTrader()
 {
 //    delete ui;
     delete request;
-    delete graph;
-    delete ordersGraph;
+//    delete graph;
+//    delete ordersGraph;
     delete timerDepth;
     delete timerTicker;
     delete timerBalance;
     delete timerOrders;
-    delete myOrderTableWidget;
+//    delete myOrderTableWidget;
     btctrader->sync();
     delete btctrader;
 }
 
 int BTCTrader::gotReply ( QNetworkReply* reply )
 {
+ /*   if ( graph == NULL )
+    {
+//        timerOrders->start ( poolInterval );
+        return 0;
+    }*/
     QByteArray result;
     float bid = 0;
     float ask = 0;
     float trade = 0;
     result = reply->readAll ();
+
     QScriptValue sc;
     QScriptEngine engine;
     sc = engine.evaluate("(" + QString(result) + ")");
@@ -132,13 +138,13 @@ int BTCTrader::gotReply ( QNetworkReply* reply )
                 counter++;
             }
             balanceBs -= balanceBs/100*fee;
-            ui->USDLabel->setText( QString::number ( balanceUSD ) );
-            ui->USDtoBTCLabel->setText (QString::number ( balanceBs ) );
+//            ui->USDLabel->setText( QString::number ( balanceUSD ) );
+//            ui->USDtoBTCLabel->setText (QString::number ( balanceBs ) );
 
 
             graph->updateAsk( ask );
-            ordersGraph->updateAsks( hash );
-            for ( int i=4; i>=0;i-- )
+//            ordersGraph->updateAsks( hash );
+/*            for ( int i=4; i>=0;i-- )
             {
                 QTableWidgetItem* item;
                 item = ui->bidTableWidget->takeItem ( 0, i*2 );
@@ -152,7 +158,7 @@ int BTCTrader::gotReply ( QNetworkReply* reply )
                 item->setText( QString::number ( ask ) );
                 ui->bidTableWidget->setItem ( 0, i*2+1, item );
 
-            }
+            }*/
     }
     if (sc.property("bids").isArray())
     {
@@ -187,12 +193,12 @@ int BTCTrader::gotReply ( QNetworkReply* reply )
                 }
                 counter--;
             }
-            ui->BTCLabel->setText( QString::number ( balance ) );
-            ui->BTCtoUSDLabel->setText (QString::number ( balanceBs ) );
+//            ui->BTCLabel->setText( QString::number ( balance ) );
+//            ui->BTCtoUSDLabel->setText (QString::number ( balanceBs ) );
             graph->updateBid( bid );
-            ordersGraph->updateBids( hash );
+//            ordersGraph->updateBids( hash );
 
-            for ( int i=5; i<=9;i++ )
+/*            for ( int i=5; i<=9;i++ )
             {
                 QTableWidgetItem* item;
                 item = ui->bidTableWidget->takeItem ( 0, i*2 );
@@ -205,7 +211,7 @@ int BTCTrader::gotReply ( QNetworkReply* reply )
                 bid = (float)hash.value( keys.at ( keys.count() - i + 4 ) );
                 item->setText( QString::number ( bid ) );
                 ui->bidTableWidget->setItem ( 0, i*2+1, item );
-            }
+            }*/
             timerDepth->start ( poolInterval );
     }
     if ( sc.property ( "ticker" ).isObject() )
@@ -213,11 +219,11 @@ int BTCTrader::gotReply ( QNetworkReply* reply )
         QString str = sc.property("ticker").property("last").toString();
         trade = str.toFloat ();
         graph->updateTrade( trade );
-        QTableWidgetItem* item;
-        item = ui->bidTableWidget->takeItem ( 0, 20 );
-        item->setText( str );
-        item->setForeground( Qt::green );
-        ui->bidTableWidget->setItem ( 0, 20, item );
+//        QTableWidgetItem* item;
+//        item = ui->bidTableWidget->takeItem ( 0, 20 );
+//        item->setText( str );
+//        item->setForeground( Qt::green );
+//        ui->bidTableWidget->setItem ( 0, 20, item );
         timerTicker->start ( poolInterval );
 
     }
@@ -230,23 +236,23 @@ int BTCTrader::gotReply ( QNetworkReply* reply )
         balance = sc.property ( "btcs" ).toNumber();
     }
 
-    if ( sc.property ( "orders" ).isObject() && ! myOrderTableWidget->contextMenu->isVisible() )
+    if ( sc.property ( "orders" ).isObject()/* && ! myOrderTableWidget->contextMenu->isVisible()*/ )
     {
         errorCount = 0;
-        myOrderTableWidget->clear();
-        myOrderTableWidget->setRowCount( 0 );
-        myOrderTableWidget->setColumnCount( 4 );
+//        myOrderTableWidget->clear();
+//        myOrderTableWidget->setRowCount( 0 );
+//        myOrderTableWidget->setColumnCount( 4 );
         QScriptValueIterator iterator ( sc.property( "orders" ) );
         while ( iterator.hasNext() )
         {
             iterator.next();
             QTableWidgetItem* item;
-            myOrderTableWidget->insertRow( 0 );
+//            myOrderTableWidget->insertRow( 0 );
             item = new QTableWidgetItem ();
             item->setText( iterator.value().property( "oid" ).toString() );
             if ( iterator.value().property ( "status" ).toInteger() != 1 )
                 item->setBackgroundColor( ( QColor ( Qt::gray ) ) );
-            myOrderTableWidget->setItem( 0, 0, item );
+//            myOrderTableWidget->setItem( 0, 0, item );
             item = new QTableWidgetItem ();
             if ( iterator.value().property( "type" ).toInteger() == 1 )
                 item->setText( "S" );
@@ -254,25 +260,25 @@ int BTCTrader::gotReply ( QNetworkReply* reply )
                 item->setText( "B" );
             if ( iterator.value().property ( "status" ).toInteger() != 1 )
                 item->setBackgroundColor( ( QColor ( Qt::gray ) ) );
-            myOrderTableWidget->setItem( 0, 1, item );
+//            myOrderTableWidget->setItem( 0, 1, item );
             item = new QTableWidgetItem ();
             item->setText( iterator.value().property( "amount" ).toString() );
             if ( iterator.value().property ( "status" ).toInteger() != 1 )
                 item->setBackgroundColor( ( QColor ( Qt::gray ) ) );
-            myOrderTableWidget->setItem( 0, 2, item );
+//            myOrderTableWidget->setItem( 0, 2, item );
             item = new QTableWidgetItem ();
             item->setText( iterator.value().property( "price" ).toString() );
             if ( iterator.value().property ( "status" ).toInteger() != 1 )
                 item->setBackgroundColor( ( QColor ( Qt::gray ) ) );
-            myOrderTableWidget->setItem( 0, 3, item );
-            myOrderTableWidget->setRowHeight(0, 15);
+//            myOrderTableWidget->setItem( 0, 3, item );
+//            myOrderTableWidget->setRowHeight(0, 15);
         }
 /*        myOrderTableWidget->removeRow( 0 );*/
 
-        myOrderTableWidget->setColumnWidth( 0, 0 );
+/*        myOrderTableWidget->setColumnWidth( 0, 0 );
         myOrderTableWidget->setColumnWidth( 1, 20 );
         myOrderTableWidget->setColumnWidth( 2, 110 );
-        myOrderTableWidget->setColumnWidth( 3, 110 );
+        myOrderTableWidget->setColumnWidth( 3, 110 );*/
         timerOrders->start( poolInterval );
     }
     if ( sc.property( "error" ).toString().length() > 0 )
@@ -284,8 +290,8 @@ int BTCTrader::gotReply ( QNetworkReply* reply )
 
             failedLogin = true;
             qDebug ( sc.property( "error" ).toString().toStdString().c_str() );
-            this->ui->statusBar->showMessage ( sc.property( "error" ).toString() );
-            this->setWindowTitle( "BTCTrade - failed login" );
+//            this->ui->statusBar->showMessage ( sc.property( "error" ).toString() );
+//            this->setWindowTitle( "BTCTrade - failed login" );
         }
     }
 
@@ -394,9 +400,9 @@ void BTCTrader::buyTextEdited ( QString )
         return;
     float amount;
     float rate;
-    amount = ui->buyAmountLineEdit->text().toFloat();
-    rate = ui->buyRateLineEdit->text().toFloat();
-    ui->buyCostLabel->setText( QString::number ( ( amount * rate ) + (amount * rate / 100 * fee ) ) );
+//    amount = ui->buyAmountLineEdit->text().toFloat();
+//    rate = ui->buyRateLineEdit->text().toFloat();
+//    ui->buyCostLabel->setText( QString::number ( ( amount * rate ) + (amount * rate / 100 * fee ) ) );
 }
 
 void BTCTrader::sellTextEdited ( QString )
@@ -405,9 +411,9 @@ void BTCTrader::sellTextEdited ( QString )
         return;
     float amount;
     float rate;
-    amount = ui->sellAmountLineEdit->text().toFloat();
-    rate = ui->sellRateLineEdit->text().toFloat();
-    ui->sellCostLabel->setText( QString::number ( ( amount - amount / 100 * fee ) * rate  ) );
+//    amount = ui->sellAmountLineEdit->text().toFloat();
+//    rate = ui->sellRateLineEdit->text().toFloat();
+//    ui->sellCostLabel->setText( QString::number ( ( amount - amount / 100 * fee ) * rate  ) );
 }
 
 void BTCTrader::buyOrder ( bool )
@@ -416,12 +422,12 @@ void BTCTrader::buyOrder ( bool )
         return;
     float amount;
     float rate;
-    amount = ui->buyAmountLineEdit->text().toFloat();
-    rate = ui->buyRateLineEdit->text().toFloat();
+//    amount = ui->buyAmountLineEdit->text().toFloat();
+//    rate = ui->buyRateLineEdit->text().toFloat();
     if ( amount > 0 && rate > 0 )
     {
         sendBuyRequest ( amount, rate );
-        ui->buyAmountLineEdit->setText( "0" );
+//        ui->buyAmountLineEdit->setText( "0" );
     }
 }
 
@@ -431,19 +437,19 @@ void BTCTrader::sellOrder ( bool )
         return;
     float amount;
     float rate;
-    amount = ui->sellAmountLineEdit->text().toFloat();
-    rate = ui->sellRateLineEdit->text().toFloat();
+//    amount = ui->sellAmountLineEdit->text().toFloat();
+//    rate = ui->sellRateLineEdit->text().toFloat();
     if ( amount > 0 && rate > 0 )
     {
         sendSellRequest ( amount, rate );
-        ui->sellAmountLineEdit->setText( "0" );
+//        ui->sellAmountLineEdit->setText( "0" );
     }
 
 }
 
 void BTCTrader::preferences()
 {
-    PreferenceDialog pref ( this );
+/*    PreferenceDialog pref ( this );
     pref.setPoolInterval( poolInterval);
     pref.setSecret( restSign );
     pref.setKey( restKey );
@@ -458,23 +464,23 @@ void BTCTrader::preferences()
         QString pass = pref.getSavePassword ();
         if ( pass.length() > 1 )
             saveKeys ( pass );
-    }
+    }*/
 }
 
 void BTCTrader::tradeHistory ()
 {
-    HistoryDialog trade ( this );
+/*    HistoryDialog trade ( this );
     TradeHistoryWidget* tradeWidget = new TradeHistoryWidget ( this );
     trade.layout()->addWidget( tradeWidget );
     trade.setWindowTitle( "Trade history" );
     trade.exec();
-    delete tradeWidget;
+    delete tradeWidget;*/
 }
 void BTCTrader::clearError ()
 {
     failedLogin = true;
     errorCount = 0;
-    this->setWindowTitle( "BTCTrade" );
+//    this->setWindowTitle( "BTCTrade" );
         timerOrders->start ( poolInterval );
 }
 
@@ -486,11 +492,11 @@ void BTCTrader::openKeys ( QString openPassword )
         restSign = "";
         failedLogin = true;
         errorCount = 5;
-        this->setWindowTitle( "BTCTrade: login credentials are empty" );
+//        this->setWindowTitle( "BTCTrade: login credentials are empty" );
 
         return;
     }
-    QByteArray result;
+/*    QByteArray result;
     QCA::Initializer init;
     QCA::SymmetricKey encryptionKey ( QByteArray ( openPassword.toStdString().c_str() ) );
     QCA::InitializationVector iv( QByteArray ( "mtgox" ) );
@@ -507,12 +513,12 @@ void BTCTrader::openKeys ( QString openPassword )
     resultRegion = alg.update( secret );
     resultRegion += alg.final ();
     result = resultRegion.toByteArray();
-    restSign = QString ( result );
+    restSign = QString ( result );*/
 }
 
 void BTCTrader::saveKeys ( QString openPassword )
 {
-    QByteArray result;
+/*    QByteArray result;
     QCA::Initializer init;
     QCA::SymmetricKey encryptionKey ( QByteArray ( openPassword.toStdString().c_str() ) );
     QCA::InitializationVector iv( QByteArray ( "mtgox" ) );
@@ -530,11 +536,21 @@ void BTCTrader::saveKeys ( QString openPassword )
     resultRegion += alg.final ();
     result = resultRegion.toByteArray();
     btctrader->setValue ( "secret", QString ( result.toBase64() ) );
-    btctrader->sync();
+    btctrader->sync();*/
 
     failedLogin = true;
     errorCount = 0;
-    this->setWindowTitle( "BTCTrade" );
+//    this->setWindowTitle( "BTCTrade" );
         timerOrders->start ( poolInterval );
 
+}
+
+void BTCTrader::setGraphDeclarative ( GraphicWidgetDeclarative* g )
+{
+    graphDeclarative = g;
+    graph = g->getGraphicWidget();
+    if ( graphDeclarative == NULL )
+        qDebug ( "NULL" );
+    timerDepth->start( poolInterval );
+    timerTicker->start( poolInterval );
 }

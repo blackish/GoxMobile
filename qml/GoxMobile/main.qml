@@ -1,6 +1,6 @@
 import QtQuick 1.1
 import com.nokia.meego 1.0
-import BTCTrader 1.0
+import btctrader 1.0
 
 PageStackWindow {
     id: appWindow
@@ -8,12 +8,17 @@ PageStackWindow {
     initialPage: mainPage
 
     Page{
+        tools: commonTools
         id: mainPage
         GraphicWidgetDeclarative {
             id: graphicWidget
+            anchors.fill: parent
         }
     }
-
+    BTCTrader {
+        id: btctrader
+        graphicWidget: graphicWidget
+    }
 
     TradeDepth {
         id: tradeDepth

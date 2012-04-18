@@ -5,27 +5,31 @@
 #include <QNetworkReply>
 #include <QTimer>
 #include "graphicwidget.h"
+#include "graphicwidgetdeclarative.h"
 //#include "orderswidget.h"
 //#include "myorderstablewidget.h"
 #include <QSettings>
 #include <QSslError>
 
-namespace Ui {
+/*namespace Ui {
     class BTCTrader;
-}
+}*/
 
 class BTCTrader : public QObject
 {
     Q_OBJECT
+    Q_PROPERTY(GraphicWidgetDeclarative* graphicWidget WRITE setGraphDeclarative)
 
 public:
-    explicit BTCTrader(QWidget *parent = 0);
+    explicit BTCTrader(QObject *parent = 0);
     ~BTCTrader();
+    void setGraphDeclarative ( GraphicWidgetDeclarative* );
 
 private:
     QNetworkAccessManager *request;
     GraphicWidget* graph;
-    OrdersWidget* ordersGraph;
+    GraphicWidgetDeclarative* graphDeclarative;
+//    OrdersWidget* ordersGraph;
     QTimer* timerDepth;
     QTimer* timerTicker;
     QTimer* timerBalance;
@@ -33,7 +37,7 @@ private:
     float balance;
     float balanceUSD;
     float fee;
-    MyOrdersTableWidget* myOrderTableWidget;
+//    MyOrdersTableWidget* myOrderTableWidget;
     QString goxLogin;
     QString goxPassword;
     bool failedLogin;

@@ -11,6 +11,7 @@ class GraphicWidgetDeclarative : public QDeclarativeItem
 public:
     explicit GraphicWidgetDeclarative(QDeclarativeItem *parent = 0);
     ~GraphicWidgetDeclarative ();
+    GraphicWidget* getGraphicWidget ();
 private:
     GraphicWidget *widget;
     QGraphicsProxyWidget *proxy;

@@ -33,7 +33,8 @@ QT += network script
 SOURCES += main.cpp \
     graphicwidgetdeclarative.cpp \
     graphicwidget.cpp \
-    btctrader.cpp
+    btctrader.cpp \
+    orderswidget.cpp
 
 # Please do not modify the following two lines. Required for deployment.
 include(qmlapplicationviewer/qmlapplicationviewer.pri)
@@ -51,4 +52,5 @@ OTHER_FILES += \
 HEADERS += \
     graphicwidgetdeclarative.h \
     graphicwidget.h \
-    btctrader.h
+    btctrader.h \
+    orderswidget.h

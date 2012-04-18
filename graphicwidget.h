@@ -22,6 +22,9 @@ private:
     int currentYAsk;
     int currentYBid;
     int currentYTrade;
+    QList<float> asks;
+    QList<float> bids;
+    QList<float> trades;
 protected:
     void paintEvent( QPaintEvent* event );
     void resizeEvent ( QResizeEvent * event );
