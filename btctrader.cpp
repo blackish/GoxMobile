@@ -69,8 +69,8 @@ BTCTrader::BTCTrader(QObject *parent) :
     balance = 0;
     balanceUSD = 0;
     poolInterval = 5000;
-//    timerDepth->start( poolInterval );
-//    timerTicker->start( poolInterval );
+    timerDepth->start( poolInterval );
+    timerTicker->start( poolInterval );
 //    timerOrders->start ( poolInterval );
 }
 
@@ -142,8 +142,10 @@ int BTCTrader::gotReply ( QNetworkReply* reply )
 //            ui->USDtoBTCLabel->setText (QString::number ( balanceBs ) );
 
 
-            graph->updateAsk( ask );
-//            ordersGraph->updateAsks( hash );
+            if ( graph != NULL )
+                graph->updateAsk( ask );
+            if ( ordersGraph != NULL )
+                ordersGraph->updateAsks( hash );
 /*            for ( int i=4; i>=0;i-- )
             {
                 QTableWidgetItem* item;
@@ -195,8 +197,10 @@ int BTCTrader::gotReply ( QNetworkReply* reply )
             }
 //            ui->BTCLabel->setText( QString::number ( balance ) );
 //            ui->BTCtoUSDLabel->setText (QString::number ( balanceBs ) );
-            graph->updateBid( bid );
-//            ordersGraph->updateBids( hash );
+            if ( graph != NULL )
+                graph->updateBid( bid );
+            if ( ordersGraph != NULL )
+                ordersGraph->updateBids( hash );
 
 /*            for ( int i=5; i<=9;i++ )
             {
@@ -551,6 +555,16 @@ void BTCTrader::setGraphDeclarative ( GraphicWidgetDeclarative* g )
     graph = g->getGraphicWidget();
     if ( graphDeclarative == NULL )
         qDebug ( "NULL" );
-    timerDepth->start( poolInterval );
-    timerTicker->start( poolInterval );
+//    timerDepth->start( poolInterval );
+//    timerTicker->start( poolInterval );
+}
+
+void BTCTrader::setOrdersDeclarative ( OrdersWidgetDeclarative* g )
+{
+    ordersDeclarative = g;
+    ordersGraph = g->getOrdersWidget();
+    if ( graphDeclarative == NULL )
+        qDebug ( "NULL" );
+//    timerDepth->start( poolInterval );
+//    timerTicker->start( poolInterval );
 }

@@ -6,7 +6,8 @@
 #include <QTimer>
 #include "graphicwidget.h"
 #include "graphicwidgetdeclarative.h"
-//#include "orderswidget.h"
+#include "orderswidget.h"
+#include "orderswidgetdeclarative.h"
 //#include "myorderstablewidget.h"
 #include <QSettings>
 #include <QSslError>
@@ -19,17 +20,20 @@ class BTCTrader : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(GraphicWidgetDeclarative* graphicWidget WRITE setGraphDeclarative)
+    Q_PROPERTY(OrdersWidgetDeclarative* ordersWidget WRITE setOrdersDeclarative)
 
 public:
     explicit BTCTrader(QObject *parent = 0);
     ~BTCTrader();
     void setGraphDeclarative ( GraphicWidgetDeclarative* );
+    void setOrdersDeclarative ( OrdersWidgetDeclarative* );
 
 private:
     QNetworkAccessManager *request;
     GraphicWidget* graph;
     GraphicWidgetDeclarative* graphDeclarative;
-//    OrdersWidget* ordersGraph;
+    OrdersWidgetDeclarative* ordersDeclarative;
+    OrdersWidget* ordersGraph;
     QTimer* timerDepth;
     QTimer* timerTicker;
     QTimer* timerBalance;

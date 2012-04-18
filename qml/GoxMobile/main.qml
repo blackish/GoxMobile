@@ -5,7 +5,7 @@ import btctrader 1.0
 PageStackWindow {
     id: appWindow
 
-    initialPage: mainPage
+    initialPage: tradeDepth
 
     Page{
         tools: commonTools
@@ -15,14 +15,21 @@ PageStackWindow {
             anchors.fill: parent
         }
     }
+    Page {
+        tools: commonTools
+        id: tradeDepth
+        OrdersWidgetDeclarative {
+            id: ordersWidget
+            anchors.fill: parent
+        }
+    }
+
     BTCTrader {
         id: btctrader
         graphicWidget: graphicWidget
+        ordersWidget: ordersWidget
     }
 
-    TradeDepth {
-        id: tradeDepth
-    }
     TradeHistory {
         id: tradeHistory
     }

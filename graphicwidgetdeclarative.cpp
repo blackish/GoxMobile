@@ -10,8 +10,8 @@ GraphicWidgetDeclarative::GraphicWidgetDeclarative(QDeclarativeItem *parent) :
 
 GraphicWidgetDeclarative::~GraphicWidgetDeclarative ()
 {
-    delete widget;
-    delete proxy;
+//    delete proxy;
+//    delete widget;
 }
 
 GraphicWidget* GraphicWidgetDeclarative::getGraphicWidget ()

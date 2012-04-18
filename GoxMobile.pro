@@ -34,7 +34,9 @@ SOURCES += main.cpp \
     graphicwidgetdeclarative.cpp \
     graphicwidget.cpp \
     btctrader.cpp \
-    orderswidget.cpp
+    orderswidget.cpp \
+    orderitem.cpp \
+    orderswidgetdeclarative.cpp
 
 # Please do not modify the following two lines. Required for deployment.
 include(qmlapplicationviewer/qmlapplicationviewer.pri)
@@ -53,4 +55,6 @@ HEADERS += \
     graphicwidgetdeclarative.h \
     graphicwidget.h \
     btctrader.h \
-    orderswidget.h
+    orderswidget.h \
+    orderitem.h \
+    orderswidgetdeclarative.h
