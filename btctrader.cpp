@@ -68,7 +68,7 @@ BTCTrader::BTCTrader(QObject *parent) :
     connect ( ui->actionClear_error, SIGNAL ( triggered () ), this, SLOT ( clearError() ) );*/
     balance = 0;
     balanceUSD = 0;
-    poolInterval = 5000;
+    poolInterval = 10000;
     timerDepth->start( poolInterval );
     timerTicker->start( poolInterval );
 //    timerOrders->start ( poolInterval );

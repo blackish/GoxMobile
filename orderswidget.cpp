@@ -66,8 +66,8 @@ void OrdersWidget::recalculate (){
     items.clear();
 /*    xScale = geomX / ( maxAsk - minBid );
     yScale = geomY / ( maxVolume );*/
-    yScale = geomY / ( maxAsk - minBid );
-    xScale = geomX / ( maxVolume );
+    yScale = ( geomY - 100 ) / ( maxAsk - minBid );
+    xScale = ( geomX - 22 )/ ( maxVolume );
 
     for ( int i=0;i<bidsList.count();i++ )
     {
@@ -111,7 +111,7 @@ void OrdersWidget::paintEvent( QPaintEvent* event )
     QPen pen;
     QPainter painter ( this );
     geomX = this->width();
-    geomY = this->height() - 100;
+    geomY = this->height();
 //    geomX = 285;
 //    geomY = 480;
     painter.fillRect ( 0, 0, geomX, geomY, QBrush ( Qt::white ) );
@@ -119,7 +119,7 @@ void OrdersWidget::paintEvent( QPaintEvent* event )
     foreach (OrderItem item, items) {
         painter.setPen(item.color());
         painter.setBrush(item.color());
-        painter.drawLine( item.position().x(), item.position().y(), 0, item.position().y() );
+        painter.drawLine( item.position().x(), item.position().y() + 11, 0, item.position().y() + 11 );
         painter.translate(item.position());
         painter.drawPath(item.path());
         painter.translate(-item.position());
