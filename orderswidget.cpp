@@ -12,7 +12,7 @@ OrdersWidget::OrdersWidget(QWidget *parent) :
     maxAsk = 0;
     maxVolume = 0;
     path = QPainterPath ();
-    path.addEllipse( 0, 0, 12, 12 );
+    path.addEllipse( 0, 0, 22, 22 );
 
 
 }
@@ -112,6 +112,8 @@ void OrdersWidget::paintEvent( QPaintEvent* event )
     QPainter painter ( this );
     geomX = this->width();
     geomY = this->height() - 100;
+//    geomX = 285;
+//    geomY = 480;
     painter.fillRect ( 0, 0, geomX, geomY, QBrush ( Qt::white ) );
 
     foreach (OrderItem item, items) {
@@ -122,6 +124,10 @@ void OrdersWidget::paintEvent( QPaintEvent* event )
         painter.drawPath(item.path());
         painter.translate(-item.position());
     }
+//    painter.drawTextI ( new QPoint ( 100, 100 ), new QTextItem ( currentToolTip ) );
+    painter.setFont ( QFont ("Times", 20, QFont::Bold) );
+    painter.setPen ( Qt::black );
+    painter.drawText ( 300, 50, currentToolTip );
 }
 
 void OrdersWidget::resizeEvent ( QResizeEvent * event )
@@ -138,9 +144,14 @@ void OrdersWidget::mousePressEvent ( QMouseEvent* e )
 {
     int index = itemAt ( e->pos() );
     if ( index != -1 )
-        QToolTip::showText(e->globalPos(), items[index].toolTip());
+//        QToolTip::showText(e->pos(), items[index].toolTip());
+//        QToolTip::showText(e->globalPos(), items[index].toolTip());
+        currentToolTip = items[index].toolTip();
+
     else
-        QToolTip::showText(e->globalPos(), "");
+//        QToolTip::showText(e->globalPos(), "");
+        currentToolTip = "";
+    update ();
 
 }
 

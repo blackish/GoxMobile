@@ -44,6 +44,7 @@ private:
     float yScale;
     void recalculate ();
     int itemAt(const QPoint &pos);
+    QString currentToolTip;
 };
 
 #endif // ORDERSWIDGET_H

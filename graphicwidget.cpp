@@ -56,8 +56,10 @@ void GraphicWidget::paintEvent( QPaintEvent* event )
     float min;
     float max;
     float value;
+    float prev;
     QPen pen;
     QPainter painter ( this );
+    pen.setWidth( 2 );
     min = 999999999;
     max = 0;
     geomY = this->height();
@@ -101,21 +103,25 @@ void GraphicWidget::paintEvent( QPaintEvent* event )
             min = value;
     }
     min = floor ( min );
-    max = floor ( max ) + 1;
+    if ( max - min > 0.5 )
+        max = floor ( max ) + 1;
+    else
+        max = floor ( max ) + 0.5;
     scale = geomX/( max - min );
 
     if ( bids.size() >= 2 )
     {
         bidsIterator.toFront();
-        geomY = 0;
+        geomY = 1;
         pen.setColor ( Qt::blue );
         painter.setPen ( pen );
         value = bidsIterator.next ();
         while ( bidsIterator.hasNext() )
         {
+            prev = bidsIterator.peekPrevious();
             value = bidsIterator.next ();
 //            painter.drawEllipse((value - min) * scale, geomY, 2, 2 );
-            painter.drawLine( (bidsIterator.peekPrevious() - min ) * scale, geomY, (value - min) * scale, geomY + 10 );
+            painter.drawLine( ( prev - min ) * scale, geomY, (value - min) * scale, geomY + 10 );
             geomY+=10;
         }
     }
@@ -123,30 +129,33 @@ void GraphicWidget::paintEvent( QPaintEvent* event )
     {
         tradesIterator.toFront();
         value = tradesIterator.next ();
-        geomY = 0;
+        geomY = 1;
         pen.setColor ( Qt::green );
         painter.setPen ( pen );
         while ( tradesIterator.hasNext() )
         {
+            prev = tradesIterator.peekPrevious();
             value = tradesIterator.next ();
 //            painter.drawEllipse((value - min) * scale, geomY, 2, 2 );
-            painter.drawLine( (tradesIterator.peekPrevious() - min ) * scale , geomY, (value - min) * scale, geomY + 10 );
+            painter.drawLine( (prev - min ) * scale , geomY, (value - min) * scale, geomY + 10 );
             geomY+=10;
         }
     }
     if ( asks.size() >= 2 )
     {
         asksIterator.toFront();
-        value = tradesIterator.next ();
-        geomY = 0;
+        value = asksIterator.next ();
+        geomY = 1;
         pen.setColor ( Qt::red );
         painter.setPen ( pen );
         while ( asksIterator.hasNext() )
         {
+            prev = asksIterator.peekPrevious();
             value = asksIterator.next ();
-//            painter.drawEllipse((value - min) * scale, geomY, 2, 2 );
-            painter.drawLine( (asksIterator.peekPrevious() - min ) * scale, geomY, (value - min) * scale, geomY + 10 );
+//            painter.drawEllipse((value - min) * scale, geomY, 10, 10 );
+            painter.drawLine( (prev - min ) * scale, geomY, (value - min) * scale, geomY + 10 );
             geomY+=10;
+//            qDebug ( QString::number (  (asksIterator.peekPrevious() - min ) * scale).toStdString().c_str() );
         }
     }
 /*

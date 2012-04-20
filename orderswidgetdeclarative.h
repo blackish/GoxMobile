@@ -12,6 +12,7 @@ public:
     explicit OrdersWidgetDeclarative(QDeclarativeItem *parent = 0);
     ~OrdersWidgetDeclarative ();
     OrdersWidget* getOrdersWidget ();
+//    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = 0);
 private:
     OrdersWidget* widget;
     QGraphicsProxyWidget *proxy;

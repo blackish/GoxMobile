@@ -1,11 +1,19 @@
 #include "orderswidgetdeclarative.h"
+#include <QGraphicsScene>
 
 OrdersWidgetDeclarative::OrdersWidgetDeclarative(QDeclarativeItem *parent) :
     QDeclarativeItem(parent)
 {
-    widget = new OrdersWidget ();
+
+    setFlag(QGraphicsItem::ItemHasNoContents, false);
     proxy = new QGraphicsProxyWidget(this);
-    proxy->setWidget(widget);
+    widget = new OrdersWidget (  );
+    widget->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Expanding );
+    widget->setMinimumSize(480,840);
+//    proxy->scene()->addWidget( widget );
+    proxy->setWidget( widget );
+
+
 }
 
 OrdersWidgetDeclarative::~OrdersWidgetDeclarative ()
@@ -18,3 +26,4 @@ OrdersWidget* OrdersWidgetDeclarative::getOrdersWidget()
 {
     return widget;
 }
+

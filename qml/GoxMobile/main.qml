@@ -5,7 +5,7 @@ import btctrader 1.0
 PageStackWindow {
     id: appWindow
 
-    initialPage: tradeDepth
+    initialPage: tradeList
 
     Page{
         tools: commonTools
@@ -14,6 +14,7 @@ PageStackWindow {
             id: graphicWidget
             anchors.fill: parent
         }
+        anchors.fill: parent
     }
     Page {
         tools: commonTools
@@ -22,19 +23,30 @@ PageStackWindow {
             id: ordersWidget
             anchors.fill: parent
         }
+        anchors.fill: parent
+    }
+
+    Page {
+        tools: commonTools
+        id: tradeList
+        TradeListDeclarative {
+            id: tradeListWidget
+            anchors.fill: parent
+            width: 500
+            height: 500
+        }
+        anchors.fill: parent
     }
 
     BTCTrader {
         id: btctrader
         graphicWidget: graphicWidget
         ordersWidget: ordersWidget
+        tradeList: tradeListWidget
     }
 
     TradeHistory {
         id: tradeHistory
-    }
-    TradeList {
-        id: tradeList
     }
     MakeTrade {
         id: makeTrade

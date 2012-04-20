@@ -11,6 +11,7 @@
 //#include "myorderstablewidget.h"
 #include <QSettings>
 #include <QSslError>
+#include "tradelistdeclarative.h"
 
 /*namespace Ui {
     class BTCTrader;
@@ -21,12 +22,14 @@ class BTCTrader : public QObject
     Q_OBJECT
     Q_PROPERTY(GraphicWidgetDeclarative* graphicWidget WRITE setGraphDeclarative)
     Q_PROPERTY(OrdersWidgetDeclarative* ordersWidget WRITE setOrdersDeclarative)
+    Q_PROPERTY(TradeListDeclarative* tradeList WRITE setTradeListDeclarative)
 
 public:
     explicit BTCTrader(QObject *parent = 0);
     ~BTCTrader();
     void setGraphDeclarative ( GraphicWidgetDeclarative* );
     void setOrdersDeclarative ( OrdersWidgetDeclarative* );
+    void setTradeListDeclarative ( TradeListDeclarative* );
 
 private:
     QNetworkAccessManager *request;
@@ -56,6 +59,8 @@ private:
     void signRequest ( QString* header, QNetworkRequest* newRequest );
     void openKeys ( QString );
     void saveKeys ( QString );
+    TradeListDeclarative* tradeListDeclarative;
+    QTableWidget* tradeList;
 
 public slots:
     int gotReply ( QNetworkReply* );

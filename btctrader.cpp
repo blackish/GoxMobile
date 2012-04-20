@@ -146,21 +146,23 @@ int BTCTrader::gotReply ( QNetworkReply* reply )
                 graph->updateAsk( ask );
             if ( ordersGraph != NULL )
                 ordersGraph->updateAsks( hash );
-/*            for ( int i=4; i>=0;i-- )
+            if ( tradeList != NULL )
             {
-                QTableWidgetItem* item;
-                item = ui->bidTableWidget->takeItem ( 0, i*2 );
-                ask = (float)keys.at ( 4 - i );
-                item->setText( QString::number ( ask ) );
-                item->setForeground( Qt::red );
-                ui->bidTableWidget->setItem ( 0, i*2, item );
+                for ( int i=9; i>=0;i-- )
+                {
+                      QTableWidgetItem* item;
+                      item = tradeList->takeItem ( i, 0 );
+                      ask = (float)keys.at ( 9 - i );
+                      item->setText( QString::number ( ask ) );
+                      item->setForeground( Qt::red );
+                      tradeList->setItem ( i, 0, item );
 
-                item = ui->bidTableWidget->takeItem ( 0, i*2+1 );
-                ask = (float)hash.value( keys.at ( 4 - i ) );
-                item->setText( QString::number ( ask ) );
-                ui->bidTableWidget->setItem ( 0, i*2+1, item );
-
-            }*/
+                      item = tradeList->takeItem ( i, 1 );
+                      ask = (float)hash.value( keys.at ( 9 - i ) );
+                      item->setText( QString::number ( ask ) );
+                      tradeList->setItem ( i, 1, item );
+                }
+            }
     }
     if (sc.property("bids").isArray())
     {
@@ -202,20 +204,24 @@ int BTCTrader::gotReply ( QNetworkReply* reply )
             if ( ordersGraph != NULL )
                 ordersGraph->updateBids( hash );
 
-/*            for ( int i=5; i<=9;i++ )
+            if ( tradeList != NULL )
             {
-                QTableWidgetItem* item;
-                item = ui->bidTableWidget->takeItem ( 0, i*2 );
-                bid = (float)keys.at ( keys.count() - i + 4 );
-                item->setText( QString::number ( bid ) );
-                item->setForeground( Qt::blue );
-                ui->bidTableWidget->setItem ( 0, i*2, item );
+                for ( int i=11; i<=20;i++ )
+                {
+                    QTableWidgetItem* item;
+                    item = tradeList->takeItem ( i, 0 );
+                    bid = (float)keys.at ( keys.count() - i + 10 );
+                    item->setText( QString::number ( bid ) );
+                    item->setForeground( Qt::blue );
+                    tradeList->setItem ( i, 0, item );
 
-                item = ui->bidTableWidget->takeItem ( 0, i*2+1 );
-                bid = (float)hash.value( keys.at ( keys.count() - i + 4 ) );
-                item->setText( QString::number ( bid ) );
-                ui->bidTableWidget->setItem ( 0, i*2+1, item );
-            }*/
+                    item = tradeList->takeItem ( i, 1 );
+                    bid = (float)hash.value( keys.at ( keys.count() - i + 10 ) );
+                    item->setText( QString::number ( bid ) );
+                    tradeList->setItem ( i, 1, item );
+                }
+
+            }
             timerDepth->start ( poolInterval );
     }
     if ( sc.property ( "ticker" ).isObject() )
@@ -223,6 +229,14 @@ int BTCTrader::gotReply ( QNetworkReply* reply )
         QString str = sc.property("ticker").property("last").toString();
         trade = str.toFloat ();
         graph->updateTrade( trade );
+        if ( tradeList != NULL )
+        {
+            QTableWidgetItem* item;
+            item = tradeList->takeItem ( 10, 0 );
+            item->setText( str );
+            item->setForeground( Qt::green );
+            tradeList->setItem ( 10, 0, item );
+        }
 //        QTableWidgetItem* item;
 //        item = ui->bidTableWidget->takeItem ( 0, 20 );
 //        item->setText( str );
@@ -567,4 +581,9 @@ void BTCTrader::setOrdersDeclarative ( OrdersWidgetDeclarative* g )
         qDebug ( "NULL" );
 //    timerDepth->start( poolInterval );
 //    timerTicker->start( poolInterval );
+}
+void BTCTrader::setTradeListDeclarative ( TradeListDeclarative* g )
+{
+    tradeListDeclarative = g;
+    tradeList = g->getTableWidget();
 }

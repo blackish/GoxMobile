@@ -36,7 +36,8 @@ SOURCES += main.cpp \
     btctrader.cpp \
     orderswidget.cpp \
     orderitem.cpp \
-    orderswidgetdeclarative.cpp
+    orderswidgetdeclarative.cpp \
+    tradelistdeclarative.cpp
 
 # Please do not modify the following two lines. Required for deployment.
 include(qmlapplicationviewer/qmlapplicationviewer.pri)
@@ -57,4 +58,5 @@ HEADERS += \
     btctrader.h \
     orderswidget.h \
     orderitem.h \
-    orderswidgetdeclarative.h
+    orderswidgetdeclarative.h \
+    tradelistdeclarative.h
