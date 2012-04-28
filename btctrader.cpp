@@ -10,6 +10,14 @@
 #include <QScriptEngine>
 #include <QScriptValueIterator>
 #include <QTableWidgetItem>
+#include <openssl/hmac.h>
+#include <openssl/sha.h>
+#include <openssl/engine.h>
+#include <openssl/hmac.h>
+#include <openssl/evp.h>
+
+
+
 //#include "passworddialog.h"
 //#include "preferencedialog.h"
 //#include "historydialog.h"
@@ -35,7 +43,8 @@ BTCTrader::BTCTrader(QObject *parent) :
     fee = btctrader->value( "fee" ).toFloat();
     request = new QNetworkAccessManager ( this );
 
-    nonce = QDateTime::currentDateTime().toTime_t() * 1000000;
+    nonce = QDateTime::currentDateTime().toTime_t();// * 10000000;
+    nonce = nonce * 10000000;
 
     connect ( request, SIGNAL ( finished ( QNetworkReply* ) ), this, SLOT ( gotReply ( QNetworkReply* ) ) );
 //    graph = new GraphicWidget ( this );
@@ -69,9 +78,10 @@ BTCTrader::BTCTrader(QObject *parent) :
     balance = 0;
     balanceUSD = 0;
     poolInterval = 10000;
+
     timerDepth->start( poolInterval );
     timerTicker->start( poolInterval );
-//    timerOrders->start ( poolInterval );
+    timerOrders->start ( poolInterval );
 }
 
 BTCTrader::~BTCTrader()
@@ -395,21 +405,29 @@ void BTCTrader::sendSellRequest ( float amount, float price )
 
 void BTCTrader::signRequest ( QString* header, QNetworkRequest* newRequest )
 {
-/*    nonce += 1;
+    nonce += 1;
     *header = ( header->length() == 0 ) ? "nonce=" + QString::number( nonce ) : "nonce=" + QString::number( nonce ) + "&" + *header;
-    QCA::Initializer init;
-    QCA::SecureArray key ( QByteArray::fromBase64( restSign.toStdString().c_str() ) );
-    QCA::MessageAuthenticationCode hmacObject(  "hmac(sha512)", QCA::SecureArray(), "qca-ossl");
-    QCA::SymmetricKey keyObject(key);
-    hmacObject.setup(key);
-    QCA::SecureArray message(header->toStdString().c_str());
-    hmacObject.update(message);
-    QCA::SecureArray resultArray = hmacObject.final();
-    QByteArray result;
+
+    QByteArray key = QByteArray::fromBase64( restSign.toStdString().c_str() );
+    unsigned char* result;
+    unsigned int result_len = 512;
+    HMAC_CTX ctx;
+
+    result = (unsigned char*) malloc(sizeof(unsigned char) * result_len);
+
+    ENGINE_load_builtin_engines();
+    ENGINE_register_all_complete();
+
+    HMAC_CTX_init(&ctx);
+    HMAC_Init_ex(&ctx, key.constData(), key.length(), EVP_sha512(), NULL);
+    HMAC_Update(&ctx, (unsigned char*)header->toAscii().constData(), header->length());
+    HMAC_Final(&ctx, result, &result_len);
+    HMAC_CTX_cleanup(&ctx);
+
     newRequest->setRawHeader( "Rest-Key", restKey.toStdString().c_str() );
-    result = resultArray.toByteArray();
-    newRequest->setRawHeader( "Rest-Sign", result.toBase64() );
-    newRequest->setRawHeader( "content-type","application/x-www-form-urlencoded");*/
+    newRequest->setRawHeader( "Rest-Sign", QByteArray::fromRawData( (char*)result, result_len ).toBase64() );
+    newRequest->setRawHeader( "content-type","application/x-www-form-urlencoded" );
+    free ( result );
 }
 
 void BTCTrader::buyTextEdited ( QString )

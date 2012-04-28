@@ -26,6 +26,7 @@ symbian:TARGET.CAPABILITY += NetworkServices
 # Speed up launching on MeeGo/Harmattan when using applauncherd daemon
 CONFIG += qdeclarative-boostable
 QT += network script
+LIBS += -lssl
 # Add dependency to Symbian components
 # CONFIG += qt-components
 

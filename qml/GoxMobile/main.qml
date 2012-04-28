@@ -57,8 +57,8 @@ PageStackWindow {
         visible: true
         ToolIcon { iconId: "toolbar-gallery"; onClicked: { myMenu.close(); if ( pageStack.currentPage != mainPage ) {pageStack.replace(mainPage);}; } }
         ToolIcon { iconId: "toolbar-callhistory"; onClicked: { myMenu.close(); if ( pageStack.currentPage != tradeDepth ) {pageStack.replace(tradeDepth); }; }  }
-        ToolIcon { iconId: "toolbar-list"; onClicked: { myMenu.close(); if ( pageStack.currentPage != tradeHistory ) {pageStack.replace(tradeHistory); }; } }
-        ToolIcon { iconId: "toolbar-content-ovi-music"; onClicked: { myMenu.close(); if ( pageStack.currentPage != tradeList ) {pageStack.replace(tradeList); }; } }
+        ToolIcon { iconId: "toolbar-content-ovi-music"; onClicked: { myMenu.close(); if ( pageStack.currentPage != tradeHistory ) {pageStack.replace(tradeHistory); }; } }
+        ToolIcon { iconId: "toolbar-list"; onClicked: { myMenu.close(); if ( pageStack.currentPage != tradeList ) {pageStack.replace(tradeList); }; } }
         ToolIcon { iconId: "toolbar-tools"; onClicked: { myMenu.close(); if ( pageStack.currentPage != makeTrade ) {pageStack.replace(makeTrade); }; } }
         ToolIcon {
             platformIconId: "toolbar-view-menu"
